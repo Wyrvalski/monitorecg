@@ -12,17 +12,15 @@ const dps = [];
 
 function App() {
   const [dataPointsArray, setDataPointsArray] = useState();
-  const [initialValues, setInitialValues] = useState(800);
-  const [page, setPage] = useState(0);
+  const [initialValues] = useState(800);
   const loadValuesData = async () => {
     try {
       const test = await axios.get('http://cloudecg-env.eba-mau7x2gw.us-east-1.elasticbeanstalk.com/baseR4/Observation/6441a0da0c73d10db306ba36/data/1');
       setDataPointsArray(test.data[0].data.split(' '))
       return  test.data[0].data.split(' ')
     } catch (errr) {
-      console.log(errr);
+      return errr;
     }
-    return null
   };
   function addDataPoints() {
     if (chart) {
@@ -74,7 +72,7 @@ function App() {
       },
     ],
   };
-  console.log(dataPointsArray, `ta bom`)
+
   return dataPointsArray && (
       <>
     <Container id="container">
