@@ -2,10 +2,13 @@
   "name": "monitorecg",
   "version": "0.1.0",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.13.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,12 +16,18 @@
     "eslint": "^7.32.0 || ^8.2.0",
     "eslint-config-defaults": "^9.0.0",
     "eslint-config-prettier": "^8.8.0",
+    "prettier": "^2.8.8",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-horizontal-scrolling-menu": "^4.0.3",
+    "react-loader-spinner": "^5.3.4",
+    "react-redux": "^8.0.5",
     "react-scripts": "5.0.1",
-    "styled-components": "^5.3.9",
+    "redux": "^4.2.1",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.4.2",
+    "styled-components": "^6.0.0-rc.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -26,7 +35,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint" : "eslint ."
+    "lint": "eslint ."
   },
   "eslintConfig": {
     "extends": [
@@ -47,9 +56,11 @@
     ]
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0"
   }
