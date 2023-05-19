@@ -1,2 +1,3 @@
-export const USER_LOADED = 'USER_LOADED';
-export const AUTH_ERROR = 'AUTH_ERROR';
+const SET_DATA = 'SET_DATA';
+
+export default SET_DATA;

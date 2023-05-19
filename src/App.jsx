@@ -1,100 +1,50 @@
-import React, {useEffect, useState} from 'react';
-import axios from "axios";
-import CanvasJSReact from './assets/canvasjs.react';
+import React, { useEffect, useState } from 'react';
 import 'react-horizontal-scrolling-menu/dist/styles.css';
-import {ButtonContainer, Container} from "./style";
-
-const { CanvasJSChart } = CanvasJSReact;
-let chart = null;
-const xAxisStripLinesArray = [];
-const yAxisStripLinesArray = [];
-const dps = [];
+import { useDispatch, useSelector } from 'react-redux';
+import { ThreeCircles } from 'react-loader-spinner';
+import ChartECG from './components';
+import loadValuesData from './actions/data';
+import { Loader, Page, ContainerEcg } from './style';
 
 function App() {
-  const [dataPointsArray, setDataPointsArray] = useState();
-  const [initialValues] = useState(800);
-  const loadValuesData = async () => {
-    try {
-      const test = await axios.get('http://cloudecg-env.eba-mau7x2gw.us-east-1.elasticbeanstalk.com/baseR4/Observation/6441a0da0c73d10db306ba36/data/1');
-      setDataPointsArray(test.data[0].data.split(' '))
-      return  test.data[0].data.split(' ')
-    } catch (errr) {
-      return errr;
-    }
-  };
-  function addDataPoints() {
-    if (chart) {
-      for (let i = 0; i < initialValues; i+=1) {
-        dps.push({ y: Number(dataPointsArray[i]) });
-      }
-      chart.render();
-    }
-  }
+  const [initialValues] = useState(500);
+  const data = useSelector((state) => state?.data?.dataPoints);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    loadValuesData();
-  }, [])
-  useEffect(() => {
-    if (!chart) return;
-    addDataPoints(chart);
-  }, [dataPointsArray])
+    dispatch(loadValuesData);
+  }, []);
 
-  const color = 'red';
+  // const y = [];// this contain the y values (readings) we will post the example values at the end of the article.
+  // const currentPart = 0; // current page is 1st page in the ECG
+  // const baseline = 201; // the is the ECG recording baseline
+  // let total = 0; // total number of pages
+  // let temp = y.length; // calculate the total number of pages
+  // while (temp > 0) {
+  //   temp -= 2000; // as shown in the 1st image , we will draw 4 seconds in each page (each second represented by 500 sample =2000 total sample)
+  //   total++;
+  // }
+  // // initiliazie the graphics object to draw in our Div (i.e. Canvas)
+  // const jg = new jsGraphics('Canvas');
+  // // set this true if we need to allow the user to print it, it will impact performance a little.
+  // jg.setPrintable(true);
 
-  const options = {
-    theme: 'light2',
-    axisY: {
-      stripLines: yAxisStripLinesArray,
-      gridColor: color,
-      gridThickness: .5,
-      interval: 20,
-      lineColor: color,
-      tickThickness: 0,
-      labelFormatter() {
-        return '';
-      },
-    },
-    axisX: {
-      stripLines: xAxisStripLinesArray,
-      gridColor: color,
-      gridThickness: 1,
-      interval: 20,
-      lineColor: color,
-      tickThickness: 0,
-      labelFormatter() {
-        return '';
-      },
-    },
-    data: [
-      {
-        type: 'spline',
-        color: 'black',
-        dataPoints: dps,
-      },
-    ],
-  };
+  return data?.length ? (
+    <Page>
+      <ChartECG initialValues={initialValues} dataPointsArray={data} />
+      <ChartECG initialValues={initialValues} dataPointsArray={data} />
+    </Page>
 
-  return dataPointsArray && (
-      <>
-    <Container id="container">
-      <div>
-        <CanvasJSChart
-            options={options}
-            onRef={(ref) => {chart = ref}}
-        />
-      </div>
-    </Container>
-  <ButtonContainer>
-    <button id="play" type="button" >Play</button>
-    <button id="stop" type="button" >Stop</button>
-    <button id="play" type="button" onClick={() =>
-    { document.getElementById('container').scrollLeft = 0}
-    }>Reset</button>
-  </ButtonContainer>
-  </>
-        );
+  ) : (
+    <Loader>
+      <ThreeCircles
+        height="200"
+        width="200"
+        color="blue"
+      />
+    </Loader>
+
+  );
 }
-
-
-
 
 export default App;
