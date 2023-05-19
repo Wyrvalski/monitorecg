@@ -4,7 +4,7 @@ const initialState = {
   dataPoints: [],
 };
 
-// eslint-disable-next-line default-param-last
+// eslint-disable-next-line default-param-last,func-names
 export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {

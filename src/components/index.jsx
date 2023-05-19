@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Pagination } from '@mui/material';
-import Container from './styles';
+import { Container, Button, ButtonContainer } from './styles';
 import CanvasJSReact from '../assets/canvasjs.react';
+import { ContainerEcg } from '../style';
+import previous from '../assets/previous.jpg';
+import next from '../assets/next.jpg';
 
 const { CanvasJSChart } = CanvasJSReact;
 
 const ChartECG = ({ initialValues, dataPointsArray }) => {
+  const [position, setPosition] = useState();
+  const [positionX, setPositionX] = useState();
+  const [isPrevoiusPage, setIsPreviousPage] = useState(false);
+  const [interval, setInterval] = useState({ start: 0, end: 0 });
   const [chart, setChart] = useState();
   const [page, setPage] = useState(1);
   const [lastPosition, setLastPosition] = useState(0);
@@ -14,22 +20,47 @@ const ChartECG = ({ initialValues, dataPointsArray }) => {
   const [dps] = useState([]);
   const totalPages = Math.round(dataPointsArray.length / initialValues);
   const addDataPoints = () => {
-    console.log(lastPosition, ' ppppppppppppppppp', chart);
     if (chart) {
       let pos = lastPosition;
       for (let i = lastPosition; i < initialValues; i += 1) {
         dps.push({ y: Number(dataPointsArray[i]) });
         pos += 1;
       }
+      setInterval((prevState) => ({
+        ...prevState,
+        end: dps.length - 1,
+      }));
+      setPosition(dps[dps.length - 1].y);
+      setPositionX(dps.length);
       setLastPosition(pos);
       chart.render();
     }
   };
 
-  const handleChange = () => {
-    setPage(page + 1);
-    addDataPoints(chart);
+  const handleChange = (pageChanged) => {
+    if (page > pageChanged) {
+      setPosition(Number(dataPointsArray[interval.start - 1]));
+    } else {
+      setPosition(Number(dataPointsArray[interval.end]));
+    }
+    setIsPreviousPage(page > pageChanged);
+    setPage(pageChanged);
   };
+
+  useEffect(() => {
+    if (!chart) return;
+    if (isPrevoiusPage) {
+      dps.unshift({ y: position, x: interval.start - 1 });
+      setInterval({ start: interval.start - 1, end: interval.end - 1 });
+      dps.pop();
+      chart.render();
+      return;
+    }
+    dps.push({ y: position, x: interval.end });
+    setInterval({ start: interval.start + 1, end: interval.end + 1 });
+    dps.shift();
+    chart.render();
+  }, [page]);
   useEffect(() => {
     if (!chart) return;
     addDataPoints(chart);
@@ -37,10 +68,12 @@ const ChartECG = ({ initialValues, dataPointsArray }) => {
 
   const options = {
     theme: 'light2',
+    backgroundColor: 'transparent',
     axisY: {
       gridColor: color,
-      gridThickness: 1,
+      gridThickness: 0,
       interval: 19,
+      lineThickness: 0,
       lineColor: color,
       tickThickness: 0,
       labelFormatter() {
@@ -49,7 +82,8 @@ const ChartECG = ({ initialValues, dataPointsArray }) => {
     },
     axisX: {
       gridColor: color,
-      gridThickness: 1,
+      gridThickness: 0,
+      lineThickness: 0,
       interval: 19,
       lineColor: color,
       tickThickness: 0,
@@ -67,16 +101,20 @@ const ChartECG = ({ initialValues, dataPointsArray }) => {
   };
   return (
     <>
-      <Container id="container">
-        <div>
-          <CanvasJSChart
-            options={options}
-            onRef={(ref) => { setChart(ref); }}
-          />
-        </div>
-      </Container>
-      <Pagination count={totalPages} page={page} onChange={handleChange} />
-
+      <ContainerEcg id="Canvas">
+        <Container id="container">
+          <div>
+            <CanvasJSChart
+              options={options}
+              onRef={(ref) => { setChart(ref); }}
+            />
+          </div>
+        </Container>
+      </ContainerEcg>
+      <ButtonContainer>
+        <Button onClick={() => handleChange(page - 1)} icon={previous} />
+        <Button onClick={() => handleChange(page + 1)} icon={next} />
+      </ButtonContainer>
     </>
 
   );
