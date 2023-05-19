@@ -10,7 +10,6 @@ const { CanvasJSChart } = CanvasJSReact;
 
 const ChartECG = ({ initialValues, dataPointsArray }) => {
   const [position, setPosition] = useState();
-  const [positionX, setPositionX] = useState();
   const [isPrevoiusPage, setIsPreviousPage] = useState(false);
   const [interval, setInterval] = useState({ start: 0, end: 0 });
   const [chart, setChart] = useState();
@@ -18,7 +17,6 @@ const ChartECG = ({ initialValues, dataPointsArray }) => {
   const [lastPosition, setLastPosition] = useState(0);
   const color = 'black';
   const [dps] = useState([]);
-  const totalPages = Math.round(dataPointsArray.length / initialValues);
   const addDataPoints = () => {
     if (chart) {
       let pos = lastPosition;
@@ -31,7 +29,6 @@ const ChartECG = ({ initialValues, dataPointsArray }) => {
         end: dps.length - 1,
       }));
       setPosition(dps[dps.length - 1].y);
-      setPositionX(dps.length);
       setLastPosition(pos);
       chart.render();
     }

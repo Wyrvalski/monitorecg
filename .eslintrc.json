@@ -18,6 +18,9 @@
     ],
     "ignorePatterns": ["temp.js", "**/assets/*.js"],
     "rules": {
+        "max-len": ["error", {
+            "code": "200"
+        }],
         "linebreak-style": 0,
         "react/function-component-definition": "off",
         "import/extensions": [
