@@ -18,6 +18,7 @@ const loadValuesData = async (dispatch) => {
       payload: res.data[0].data.split(' '),
     });
   } catch (errr) {
+    console.log(errr, 'https://monitorecg-production.up.railway.app/');
     return errr;
   }
   return null;
