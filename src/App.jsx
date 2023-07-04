@@ -7,7 +7,7 @@ import loadValuesData from './actions/data';
 import { Loader, Page } from './style';
 
 function App() {
-  const [initialValues] = useState(500);
+  const [initialValues] = useState(1500);
   const data = useSelector((state) => state?.data?.dataPoints);
   const dispatch = useDispatch();
 
